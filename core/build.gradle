@@ -6,3 +6,6 @@ sourceCompatibility = 1.7
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.41"
+}

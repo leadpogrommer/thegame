@@ -36,6 +36,7 @@ allprojects {
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://dl.bintray.com/kotlin/kotlinx/" }
     }
 }
 
@@ -52,6 +53,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation 'org.jetbrains.kotlinx:kotlinx-cli:0.2.1'
     }
 }
 
@@ -92,5 +94,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        compile group: 'io.netty', name: 'netty-all', version: '4.1.48.Final'
     }
 }
