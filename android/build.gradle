@@ -18,7 +18,7 @@ android {
     }
     defaultConfig {
         applicationId "ru.leadpogrommer.thegame"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
