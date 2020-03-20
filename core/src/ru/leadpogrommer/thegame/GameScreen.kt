@@ -60,7 +60,7 @@ class GameScreen(val game: TheGame, val map: String, private val communicator: C
         }
         shapeRenderer.end()
 
-        Gdx.app.log("GAME SCREEN", "${state.entities[playerUUID]?.pos}")
+//        Gdx.app.log("GAME SCREEN", "${state.entities[playerUUID]?.pos}")
 
     }
 
