@@ -13,6 +13,7 @@ class PhysicsEngine(tiledMap: TiledMap, private val entities: MutableCollection<
     val mapHeight = tiledMap.properties["height"] as Int
     val mapWidth = tiledMap.properties["width"] as Int
     init {
+        Gdx.app.log(TAG, "Loading map")
         for (layerType in MapLayer.values()){
             map[layerType] = Array(tiledMap.properties["width"] as Int) { y -> BooleanArray(tiledMap.properties["height"] as Int) {x ->
                 var out = false;
@@ -22,7 +23,7 @@ class PhysicsEngine(tiledMap: TiledMap, private val entities: MutableCollection<
                 return@BooleanArray out
             } }
         }
-        Gdx.app.log(TAG, "loaded map")
+        Gdx.app.log(TAG, "Map successfully loaded")
     }
 
     fun tick(delta: Float){

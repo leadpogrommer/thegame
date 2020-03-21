@@ -2,7 +2,6 @@ package ru.leadpogrommer.thegame.net
 
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
-import ru.leadpogrommer.thegame.Request
 import java.util.concurrent.LinkedBlockingQueue
 
 class RequestReceiverHandler (private val rq: LinkedBlockingQueue<Request>, val onReady: (ChannelHandlerContext)->Unit): ChannelInboundHandlerAdapter(){

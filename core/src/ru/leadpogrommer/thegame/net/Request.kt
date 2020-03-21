@@ -1,4 +1,4 @@
-package ru.leadpogrommer.thegame
+package ru.leadpogrommer.thegame.net
 
 import java.io.Serializable
 import java.util.*

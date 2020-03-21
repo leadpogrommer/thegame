@@ -1,7 +1,6 @@
 package ru.leadpogrommer.thegame.net
 
-import ru.leadpogrommer.thegame.Endpoint
-import ru.leadpogrommer.thegame.Request
+
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredFunctions
@@ -23,7 +22,7 @@ abstract class Communicator {
     }
 
     // Send
-    open fun enqueueRequest(r: Request){
+    open fun enqueueRequest(r: ru.leadpogrommer.thegame.net.Request){
         outRequests.add(r)
     }
 

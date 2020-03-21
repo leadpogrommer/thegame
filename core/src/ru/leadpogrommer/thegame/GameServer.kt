@@ -4,7 +4,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
 import ru.leadpogrommer.thegame.net.Communicator
 import ru.leadpogrommer.thegame.net.TcpServerCommunicator
+import ru.leadpogrommer.thegame.net.Endpoint
 import ru.leadpogrommer.thegame.physicalEngine.PhysicsEngine
+import ru.leadpogrommer.thegame.net.Request
 import java.lang.System.currentTimeMillis
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
