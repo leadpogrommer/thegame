@@ -2,14 +2,13 @@ package ru.leadpogrommer.thegame.net
 
 import ru.leadpogrommer.thegame.Endpoint
 import ru.leadpogrommer.thegame.Request
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.findAnnotation
 
-abstract class Communicator() {
-    val outRequests: LinkedBlockingQueue<Request> = LinkedBlockingQueue<Request>()
+abstract class Communicator {
+    val outRequests: LinkedBlockingQueue<Request> = LinkedBlockingQueue()
     val incomeRequests = LinkedBlockingQueue<Request>()
     private val methods: MutableMap<String, KFunction<*>> = mutableMapOf()
     private lateinit var obj: Any

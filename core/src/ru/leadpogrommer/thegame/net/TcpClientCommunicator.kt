@@ -1,28 +1,25 @@
 package ru.leadpogrommer.thegame.net
 
-import com.badlogic.gdx.Gdx
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.nio.NioSocketChannel
-import ru.leadpogrommer.thegame.Request
 import io.netty.channel.socket.SocketChannel
-import io.netty.handler.codec.serialization.ClassResolver
+import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.serialization.ClassResolvers
 import io.netty.handler.codec.serialization.ObjectDecoder
 import io.netty.handler.codec.serialization.ObjectEncoder
 
 
-class TcpClientCommunicator (val host: String, val port: Int): Communicator(){
+class TcpClientCommunicator (host: String, port: Int): Communicator(){
     lateinit var serverContext: ChannelHandlerContext
-    val sendingThread = Thread(Runnable {
+    private val sendingThread = Thread(Runnable {
         while(true){
             val r = outRequests.take()
             serverContext.writeAndFlush(r)
         }
     }, "CLIENT COMMUNICATOR")
-    val clientEventLoopGroup = NioEventLoopGroup()
+    private val clientEventLoopGroup = NioEventLoopGroup()
     init {
         val b = Bootstrap()
         b.group(clientEventLoopGroup)

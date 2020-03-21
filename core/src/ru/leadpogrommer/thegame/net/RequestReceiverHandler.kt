@@ -5,7 +5,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter
 import ru.leadpogrommer.thegame.Request
 import java.util.concurrent.LinkedBlockingQueue
 
-class RequestReceiverHandler (val rq: LinkedBlockingQueue<Request>, val onReady: (ChannelHandlerContext)->Unit): ChannelInboundHandlerAdapter(){
+class RequestReceiverHandler (private val rq: LinkedBlockingQueue<Request>, val onReady: (ChannelHandlerContext)->Unit): ChannelInboundHandlerAdapter(){
     override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
         rq.put(msg as Request)
     }

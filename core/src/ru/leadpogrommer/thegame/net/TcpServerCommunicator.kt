@@ -1,6 +1,5 @@
 package ru.leadpogrommer.thegame.net
 
-import com.badlogic.gdx.Gdx
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
@@ -13,16 +12,16 @@ import io.netty.handler.codec.serialization.ObjectEncoder
 import ru.leadpogrommer.thegame.Request
 import java.util.*
 
-class TcpServerCommunicator(val port: Int): Communicator() {
+class TcpServerCommunicator(port: Int): Communicator() {
     private val clients = mutableMapOf<UUID, ChannelHandlerContext>()
-    val sendingThread = Thread(Runnable {
+    private val sendingThread = Thread(Runnable {
         while(true){
             val r = outRequests.take()
             clients[r.uuid]?.writeAndFlush(r)
         }
     }, "SERVER COMMUNICATOR")
-    val bossGroup  = NioEventLoopGroup(1)
-    val workerGroup = NioEventLoopGroup()
+    private val bossGroup  = NioEventLoopGroup(1)
+    private val workerGroup = NioEventLoopGroup()
     init {
         val b = ServerBootstrap()
         b.group(bossGroup, workerGroup)

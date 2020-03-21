@@ -7,4 +7,5 @@ import java.util.*
 open class Entity(var uuid: UUID, var speed: Vector2, var pos: Vector2, var radius: Float): Serializable{
     var destroyed = false
     open fun onCollide(e: Entity?){}
+    open var layer = MapLayer.GROUND
 }

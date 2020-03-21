@@ -1,7 +1,7 @@
 package ru.leadpogrommer.thegame.desktop
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import ru.leadpogrommer.thegame.TheGame
 import kotlinx.cli.*
 import ru.leadpogrommer.thegame.GameServer
@@ -14,13 +14,7 @@ object DesktopLauncher {
         val serverPort by parser.option(ArgType.Int, fullName = "server")
         parser.parse(arg)
 
-        if(serverPort != null){
-            val srvc = TcpServerCommunicator(serverPort!!)
-            GameServer("test_map/test.tmx", srvc).let {srv -> srvc.setObject(srv) ; srv.start()}
-        }
-
-
-        val config = LwjglApplicationConfiguration()
-        LwjglApplication(TheGame("127.0.0.1", 1337), config)
+        val config = Lwjgl3ApplicationConfiguration()
+        Lwjgl3Application(TheGame("127.0.0.1", 1337, serverPort), config)
     }
 }

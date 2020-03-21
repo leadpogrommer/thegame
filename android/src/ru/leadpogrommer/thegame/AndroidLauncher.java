@@ -11,6 +11,6 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new TheGame(0), config);
+		initialize(new TheGame("127.0.0.1", 1337, null), config);
 	}
 }

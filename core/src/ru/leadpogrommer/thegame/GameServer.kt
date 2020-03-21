@@ -1,26 +1,26 @@
 package ru.leadpogrommer.thegame
 
-import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
 import ru.leadpogrommer.thegame.net.Communicator
 import ru.leadpogrommer.thegame.net.TcpServerCommunicator
-import ru.leadpogrommer.thegame.physicalEngine.Entity
 import ru.leadpogrommer.thegame.physicalEngine.PhysicsEngine
 import java.lang.System.currentTimeMillis
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
 
-class GameServer(val mapName: String, private val communicator: Communicator): Thread("GAME SERVER") {
-    private val engine = PhysicsEngine()
+class GameServer(mapName: String, private val communicator: Communicator): Thread("GAME SERVER") {
     private val methods = mutableMapOf<String, Any>()
-    private val requestQueue: Queue<Request> = ConcurrentLinkedQueue<Request>();
+    private val requestQueue: Queue<Request> = ConcurrentLinkedQueue<Request>()
     private val state = GameState()
+    private val tiledMap = TmxMapLoader().load(mapName)
+    private val engine = PhysicsEngine(tiledMap, state.entities.values)
 
     override fun run() {
         var prevTickTime = currentTimeMillis()
         while (true){
-            tick(currentTimeMillis() - prevTickTime)
+            engine.tick(delta = (currentTimeMillis() - prevTickTime)/1000f)
             prevTickTime = currentTimeMillis()
             communicator.processRequests()
             (communicator as TcpServerCommunicator).broadcast(Request(UUID.randomUUID(), "updateState", arrayOf(state)))
@@ -29,16 +29,7 @@ class GameServer(val mapName: String, private val communicator: Communicator): T
         }
     }
 
-    private fun tick(d: Long){
-        val delta: Float = d / 100f
-        for (entity in state.entities.values){
-            entity.pos.x += entity.speed.x * delta
-            entity.pos.y += entity.speed.y * delta
-        }
-    }
-
-
-    @Endpoint()
+    @Endpoint
     fun setMovementVector(r: Request){
         val newVector = Vector2((r.args[0] as Float), (r.args[1] as Float))
         if (newVector.len() > 1f){
@@ -48,7 +39,7 @@ class GameServer(val mapName: String, private val communicator: Communicator): T
         state.entities[r.uuid]?.let { it.speed =  newVector}
     }
 
-    @Endpoint()
+    @Endpoint
     fun addPlayer(r: Request){
         state.entities[r.uuid] = Player(r.uuid)
     }
