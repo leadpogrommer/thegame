@@ -34,5 +34,7 @@ abstract class Communicator {
         }
     }
 
+    abstract fun stop()
+
 
 }

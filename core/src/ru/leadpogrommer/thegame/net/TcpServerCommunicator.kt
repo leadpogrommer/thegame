@@ -15,8 +15,12 @@ class TcpServerCommunicator(port: Int): Communicator() {
     private val clients = mutableMapOf<UUID, ChannelHandlerContext>()
     private val sendingThread = Thread(Runnable {
         while(true){
-            val r = outRequests.take()
-            clients[r.uuid]?.writeAndFlush(r)
+            try {
+                val r = outRequests.take()
+                clients[r.uuid]?.writeAndFlush(r)
+            }catch (e: InterruptedException){
+                break
+            }
         }
     }, "SERVER COMMUNICATOR")
     private val bossGroup  = NioEventLoopGroup(1)
@@ -51,6 +55,12 @@ class TcpServerCommunicator(port: Int): Communicator() {
             val rc = Request(c, request.endpoint, request.args)
             enqueueRequest(rc)
         }
+    }
+
+    override fun stop() {
+        sendingThread.interrupt()
+        bossGroup.shutdownGracefully()
+        workerGroup.shutdownGracefully()
     }
 
 }

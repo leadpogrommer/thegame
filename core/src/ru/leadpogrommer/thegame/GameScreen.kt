@@ -109,7 +109,9 @@ class GameScreen(val game: TheGame, val mapName: String, private val communicato
 
     override fun resume() {}
 
-    override fun dispose() {}
+    override fun dispose() {
+        communicator.stop()
+    }
 
 
     companion object{

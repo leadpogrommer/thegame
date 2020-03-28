@@ -1,5 +1,6 @@
 package ru.leadpogrommer.thegame
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
 import ru.leadpogrommer.thegame.net.Communicator
@@ -18,10 +19,13 @@ class GameServer(mapName: String, private val communicator: Communicator): Threa
     private val state = GameState()
     private val tiledMap = TmxMapLoader().load(mapName)
     private val engine = PhysicsEngine(tiledMap, state.entities.values)
+    private var isStopped = false;
 
     override fun run() {
+        communicator.setObject(this)
+        Gdx.app.log(TAG, "Started")
         var prevTickTime = currentTimeMillis()
-        while (true){
+        while (!isStopped){
             engine.tick(delta = (currentTimeMillis() - prevTickTime)/1000f)
             prevTickTime = currentTimeMillis()
             communicator.processRequests()
@@ -29,6 +33,12 @@ class GameServer(mapName: String, private val communicator: Communicator): Threa
             sleep(10)
 
         }
+        communicator.stop()
+        Gdx.app.log(TAG, "Stopped")
+    }
+
+    fun finish(){
+        isStopped = true
     }
 
     @Endpoint
@@ -49,5 +59,6 @@ class GameServer(mapName: String, private val communicator: Communicator): Threa
 
     companion object{
         const val PLAYER_MAX_SPEED = 4f
+        const val TAG = "GAME SERVER"
     }
 }

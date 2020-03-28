@@ -57,6 +57,19 @@ project(":desktop") {
     }
 }
 
+project(":headless") {
+    apply plugin: "kotlin"
+
+    dependencies {
+        implementation project(":core")
+        api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "org.mockito:mockito-all:1.10.19"
+        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation 'org.jetbrains.kotlinx:kotlinx-cli:0.2.1'
+    }
+}
+
 project(":android") {
     apply plugin: "android"
     apply plugin: "kotlin-android"

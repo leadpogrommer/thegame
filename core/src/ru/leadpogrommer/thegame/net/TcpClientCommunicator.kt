@@ -15,8 +15,12 @@ class TcpClientCommunicator (host: String, port: Int): Communicator(){
     lateinit var serverContext: ChannelHandlerContext
     private val sendingThread = Thread(Runnable {
         while(true){
-            val r = outRequests.take()
-            serverContext.writeAndFlush(r)
+            try{
+                val r = outRequests.take()
+                serverContext.writeAndFlush(r)
+            }catch (e: InterruptedException){
+                break
+            }
         }
     }, "CLIENT COMMUNICATOR")
     private val clientEventLoopGroup = NioEventLoopGroup()
@@ -35,5 +39,9 @@ class TcpClientCommunicator (host: String, port: Int): Communicator(){
         sendingThread.start()
     }
 
+    override fun stop() {
+        sendingThread.interrupt()
+        clientEventLoopGroup.shutdownGracefully()
+    }
 
 }
