@@ -15,6 +15,6 @@ object DesktopLauncher {
         parser.parse(arg)
 
         val config = Lwjgl3ApplicationConfiguration()
-        Lwjgl3Application(TheGame("127.0.0.1", 1337, serverPort), config)
+        Lwjgl3Application(TheGame("18.223.1.168", 1337, serverPort), config)
     }
 }

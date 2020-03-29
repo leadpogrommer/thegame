@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/thegame
+hooks:
+  BeforeInstall:
+    - location: before-install.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: start-server.sh
+      timeout: 300
+      runas: ubuntu
+  ApplicationStop:
+    - location: stop-server.sh
+      timeout: 300
+      runas: root

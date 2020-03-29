@@ -10,5 +10,32 @@ cache:
     - $HOME/.gradle/wrapper/
 env:
   - TRAVIS=1
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    local_dir: dpl_cd_upload
+    skip_cleanup: true
+    on: &2
+      repo: leadpogrommer/thegame
+      branch: master
+    bucket: thegamebucket-lp
+    region: us-east-2
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: thegamebucket-lp
+    key: latest.zip
+    bundle_type: zip
+    application: thegameapp
+    deployment_group: thegamedg
+    region: us-east-2
+    on: *2
+
+
 script:
   - ./gradlew headless:dist
+  - zip --junk-paths latest.zip headless/build/libs/headless-1.0.jar appspec.yml start-server.sh stop-server.sh before-install.sh
+  - mkdir -p dpl_cd_upload
+  - mv latest.zip dpl_cd_upload/latest.zip
