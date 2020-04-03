@@ -50,7 +50,10 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+//        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile ("com.badlogicgames.gdx:gdx-tools:$gdxVersion") {
+            exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'
+        }
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         implementation 'org.jetbrains.kotlinx:kotlinx-cli:0.2.1'

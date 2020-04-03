@@ -38,6 +38,7 @@ class PhysicsEngine(tiledMap: TiledMap, private val entities: MutableCollection<
                     val cy = y+0.5f
                     val dst = distance(entity.pos.x, entity.pos.y, cx, cy)
                     if (dst < entity.radius + CELL_RADIUS){
+                        entity.onCollide(null)
                         // I don't know how it works, just copied it from EKW
                         val b1 = Vector2(entity.pos.x - cx, entity.pos.y - cy).nor().scl((entity.radius - dst + CELL_RADIUS) / 2f)
                         entity.pos.add(b1)
@@ -46,6 +47,7 @@ class PhysicsEngine(tiledMap: TiledMap, private val entities: MutableCollection<
                 }
             }
         }
+        entities.removeAll{ it.destroyed }
     }
 
     private fun distance(x1: Float, y1: Float, x2: Float, y2: Float): Float {

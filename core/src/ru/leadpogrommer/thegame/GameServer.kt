@@ -61,6 +61,14 @@ class GameServer(mapName: String, private val communicator: Communicator): Threa
         state.entities[r.uuid] = Player(r.uuid)
     }
 
+    @Endpoint
+    fun fire(r: Request){
+        val newUUID = UUID.randomUUID()
+        val sender = state.entities[r.uuid]!!
+        val speedVector = Vector2(10f, 0f).setAngleRad(sender.facing)
+        state.entities[newUUID] = Bullet(newUUID, speedVector, sender.pos.cpy().add(Vector2().setLength(sender.radius+0.1f).setAngleRad(sender.facing)), sender.facing, r.uuid)
+    }
+
 
     companion object{
         const val PLAYER_MAX_SPEED = 4f

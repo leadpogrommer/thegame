@@ -56,6 +56,17 @@ class GameScreen(val game: TheGame, val mapName: String, private val communicato
                 return true
             }
 
+            override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+                if(button == Input.Buttons.LEFT){
+                    sendShot()
+                }
+                return true
+            }
+
+            fun sendShot(){
+                communicator.enqueueRequest(Request(playerUUID!!, "fire", arrayOf()))
+            }
+
             fun sendAngle(angle: Float){
                 playerUUID?:return
                 communicator.enqueueRequest(Request(playerUUID!!, "setAngle", arrayOf(angle)))
