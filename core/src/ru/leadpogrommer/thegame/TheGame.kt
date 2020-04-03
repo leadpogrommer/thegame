@@ -34,6 +34,7 @@ class TheGame(private val host:String, private val port: Int, private val server
     override fun dispose() {
         batch.dispose()
         font.dispose()
+        serverPort?:return
         gameScreen.dispose()
         gameServer.finish()
         gameServer.join()

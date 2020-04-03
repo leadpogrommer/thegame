@@ -52,6 +52,11 @@ class GameServer(mapName: String, private val communicator: Communicator): Threa
     }
 
     @Endpoint
+    fun setAngle(r: Request){
+        state.entities[r.uuid]?.facing = (r.args[0] as Float)
+    }
+
+    @Endpoint
     fun addPlayer(r: Request){
         state.entities[r.uuid] = Player(r.uuid)
     }

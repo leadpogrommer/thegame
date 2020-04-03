@@ -9,12 +9,16 @@ import ru.leadpogrommer.thegame.net.TcpServerCommunicator
 
 object DesktopLauncher {
     @JvmStatic
-    fun main(arg: Array<String>) {
+    fun main(args: Array<String>) {
         val parser = ArgParser("game")
-        val serverPort by parser.option(ArgType.Int, fullName = "server")
-        parser.parse(arg)
+        val serverPort by parser.option(ArgType.Int, fullName = "create-server")
+        val connectTo by parser.option(ArgType.String, fullName = "connect-to")
+        parser.parse(args)
 
         val config = Lwjgl3ApplicationConfiguration()
-        Lwjgl3Application(TheGame("18.223.1.168", 1337, serverPort), config)
+
+
+        val host = connectTo!!.split(':')
+        Lwjgl3Application(TheGame(host[0], host[1].toInt(), serverPort), config)
     }
 }

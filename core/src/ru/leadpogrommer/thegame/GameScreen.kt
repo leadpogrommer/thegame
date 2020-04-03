@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
@@ -24,13 +25,15 @@ class GameScreen(val game: TheGame, val mapName: String, private val communicato
     private val tiledMap = TmxMapLoader().load("test_map/test.tmx")
     private val mapTileSide = tiledMap.properties["tilewidth"] as Int
     private val mapRenderer = OrthogonalTiledMapRenderer(tiledMap, 1f/mapTileSide)
-    private val camera = OrthographicCamera()
+    private val camera = GameCamera(tiledMap.properties["width"] as Int, tiledMap.properties["height"] as Int)
+    private val renderBeforePlayer = mutableListOf<Int>()
+    private val renderAfterPlayer = mutableListOf<Int>()
 
     // input initialization
     init {
         Gdx.input.inputProcessor = object: InputAdapter(){
             private var playerSpeed = Vector2(0f, 0f)
-            val keysMap = mapOf(Pair(Input.Keys.LEFT, Vector2(-1f, 0f)), Pair(Input.Keys.RIGHT, Vector2(1f, 0f)), Pair(Input.Keys.UP, Vector2(0f, 1f)), Pair(Input.Keys.DOWN, Vector2(0f, -1f)))
+            val keysMap = mapOf(Pair(Input.Keys.A, Vector2(-1f, 0f)), Pair(Input.Keys.D, Vector2(1f, 0f)), Pair(Input.Keys.W, Vector2(0f, 1f)), Pair(Input.Keys.S, Vector2(0f, -1f)))
             override fun keyDown(keycode: Int): Boolean {
                 if(keycode in keysMap.keys){
                     playerSpeed.add(keysMap[keycode])
@@ -47,21 +50,31 @@ class GameScreen(val game: TheGame, val mapName: String, private val communicato
                 return true
             }
 
+            override fun mouseMoved(screenX: Int, screenY: Int): Boolean {
+                val angle = camera.getFacingAngle(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
+                sendAngle(angle)
+                return true
+            }
+
+            fun sendAngle(angle: Float){
+                playerUUID?:return
+                communicator.enqueueRequest(Request(playerUUID!!, "setAngle", arrayOf(angle)))
+            }
+
             fun sendSpeed(){
                 communicator.enqueueRequest(Request(playerUUID!!, "setMovementVector", arrayOf(playerSpeed.x, playerSpeed.y)))
             }
         }
     }
 
-    //camera initialization
-    init{
-//        shapeRenderer.translate(0., 0.5f, 0f)
-    }
 
     override fun render(delta: Float) {
         communicator.processRequests()
+        playerUUID?:return
+        state.entities[playerUUID!!]?:return
         Gdx.gl.glClearColor(0f, 0f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.position(state.entities[playerUUID!!]!!.pos)
         camera.update()
         mapRenderer.setView(camera)
         mapRenderer.render()
@@ -89,6 +102,8 @@ class GameScreen(val game: TheGame, val mapName: String, private val communicato
 
         for (entity in state.entities.values){
             shapeRenderer.circle(entity.pos.x, entity.pos.y, entity.radius)
+            val facingVect = Vector2(1f, 0f).setLength(1f).setAngleRad(entity.facing)
+            shapeRenderer.circle(entity.pos.x + facingVect.x, entity.pos.y + facingVect.y, 0.2f)
 
         }
         shapeRenderer.end()
@@ -98,6 +113,7 @@ class GameScreen(val game: TheGame, val mapName: String, private val communicato
     override fun resize(width: Int, height: Int) {
         val vh = (NUM_VERTICAL_TILES).toFloat()
         camera.setToOrtho(false, vh*width/height, vh)
+        camera.translate(1f, 0f)
         camera.update()
     }
 
